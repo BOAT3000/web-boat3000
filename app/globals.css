@@ -11,6 +11,8 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-header: var(--font-silkscreen);
+  --font-serif: var(--font-barlow-serif);
+
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -24,4 +26,19 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin-origin {
+  transform-origin: 50% 50%;
+  animation: spin 30s linear infinite;
 }
