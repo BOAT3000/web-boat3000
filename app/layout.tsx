@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Silkscreen } from "next/font/google";
 import { Noto_Serif } from "next/font/google";
 import { Barlow_Condensed } from "next/font/google";
+import { Cormorant_Garamond } from "next/font/google";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,6 +35,12 @@ const barlowCondensed = Barlow_Condensed({
   weight: ["100"],
 });
 
+const cormorantGaramond = Cormorant_Garamond({
+  variable: "--font-cormorant-garamond",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -47,7 +55,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} ${notoSerif.variable} ${barlowCondensed.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} ${notoSerif.variable} ${barlowCondensed.variable} ${cormorantGaramond.variable} bg-gray-400 antialiased`}
       >
         {children}
       </body>
