@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BOAT3000
 
-## Getting Started
+Marketing homepage for **BOAT3000**, a craft-focused product studio. A single
+scrolling page: hero, ticker, products showcase, studio + process, selected
+work gallery, FAQ, and a book-a-call footer.
 
-First, run the development server:
+## Tech stack
+
+- [Next.js 16](https://nextjs.org) (App Router) + React 19
+- [Tailwind CSS v4](https://tailwindcss.com) (inline `@theme` tokens in
+  `app/globals.css`)
+- [shadcn](https://ui.shadcn.com)-ready (`components.json`, `cn` helper in
+  `lib/utils.ts`)
+- Fonts via `next/font`: Schibsted Grotesk (display/UI) + JetBrains Mono
+  (labels, eyebrows, footnotes)
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command         | Description                          |
+| --------------- | ------------------------------------ |
+| `npm run dev`   | Start the dev server (Turbopack)     |
+| `npm run build` | Production build                     |
+| `npm run start` | Serve the production build           |
+| `npm run lint`  | Lint with ESLint                     |
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+  layout.tsx     Root layout, font loading, metadata
+  page.tsx       The homepage (all sections + client interactions)
+  globals.css    Design tokens (@theme) + ported component styles
+components/ui/    shadcn primitives (added on demand)
+lib/utils.ts      cn() class-name helper
+public/           Images + the BOXTYPE demo video
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design system
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Two accent colors only: red (`#E0342A`) and blue (`#5B92F2`), used sparingly.
+Tokens (`--paper`, `--ink`, `--red`, etc.) live in `app/globals.css`.
+Interactions respect `prefers-reduced-motion`, and section content is visible
+by default (reveals are gated behind a JS flag) so SSR / no-JS renders fully.
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploys cleanly to [Vercel](https://vercel.com). Push the branch and import the
+repo, or run `npm run build && npm run start` behind any Node host.
