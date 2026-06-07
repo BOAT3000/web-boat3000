@@ -1,507 +1,648 @@
-import Image from "next/image";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+"use client";
 
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { ReactNode } from "react";
-// import EmblaCarousel from './EmblaCarousel'
-import { EmblaOptionsType } from 'embla-carousel'
-import EmblaCarousel from "@/components/ui/EmblaCarousel";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-import "./embla.css";
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+
+/* ---------- wordmark ---------- */
+function Wordmark({
+  className = "",
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <span className={`wordmark ${className}`} style={style}>
+      BOAT3<span className="o">0</span>00
+    </span>
+  );
+}
+
+/* ---------- scroll reveal hook ---------- */
+function useReveal<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (reduce) {
+      el.classList.add("in");
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        }
+      },
+      { rootMargin: "0px 0px -10% 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+  return ref;
+}
+
+function Reveal({
+  children,
+  className = "",
+  style,
+}: {
+  children: ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const ref = useReveal<HTMLDivElement>();
+  return (
+    <div ref={ref} className={`reveal ${className}`} style={style}>
+      {children}
+    </div>
+  );
+}
+
+/* ---------- ticker items ---------- */
+const TICKER = [
+  "CRAFT-FOCUSED PRODUCT STUDIO",
+  "LOCAL-FIRST & ONLINE PRODUCTS",
+  "WEEKLY SPRINTS · $5K",
+  "B2B · AI · WEB3",
+  "BOOKINGS OPEN 5 JAN '26",
+];
+
+function TickerRun() {
+  return (
+    <div className="run">
+      {[...TICKER, ...TICKER].map((t, i) => (
+        <span key={i}>
+          <span className="bolt">✦</span> {t}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/* ---------- FAQ accordion (native details + animated height) ---------- */
+type QA = { q: string; a: string };
+const FAQS: QA[] = [
+  {
+    q: "Can you handle branding, product, and website work?",
+    a: "Absolutely. Whether you need a new brand identity, a Framer/Webflow site, or a full product UX/UI overhaul. We've done it all, and fast. Mix and match based on what matters most right now.",
+  },
+  {
+    q: "What is the deliverable during a project?",
+    a: "Developer-ready Figma files, interactive prototypes, and clear experience documentation. We focus on designs that are easy to implement, ensuring a smooth handoff to your development team.",
+  },
+  {
+    q: "How do you communicate during a project?",
+    a: "Linear, Slack, Figma, and Notion. A dedicated Slack channel for real-time updates, Linear to keep things organized, Figma for design collaboration you can comment on as it evolves, and Notion for key decisions, so you always have a reference point.",
+  },
+  {
+    q: "What is involved during a project?",
+    a: "Daily collaboration. You see progress as it happens. No big reveal at the end.",
+  },
+  {
+    q: "How long does it take?",
+    a: "5 days. Monday to Friday. We work in focused sprints to deliver high-quality results quickly.",
+  },
+];
+
+function FaqItem({ qa, defaultOpen }: { qa: QA; defaultOpen?: boolean }) {
+  const detailsRef = useRef<HTMLDetailsElement>(null);
+  const ansRef = useRef<HTMLDivElement>(null);
+
+  const sync = (open: boolean) => {
+    const ans = ansRef.current;
+    if (!ans) return;
+    ans.style.maxHeight = open ? `${ans.scrollHeight}px` : "0px";
+  };
+
+  useEffect(() => {
+    sync(!!defaultOpen);
+    const onResize = () => sync(!!detailsRef.current?.open);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <details
+      ref={detailsRef}
+      className="qa"
+      open={defaultOpen}
+      onToggle={() => sync(!!detailsRef.current?.open)}
+    >
+      <summary>
+        {qa.q}
+        <span className="pm" />
+      </summary>
+      <div className="ans" ref={ansRef}>
+        <p>{qa.a}</p>
+      </div>
+    </details>
+  );
+}
+
+/* ---------- inline glyphs ---------- */
+function YcLogo() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 256 256" aria-hidden="true">
+      <rect fill="#FB651E" width="256" height="256" rx="6" />
+      <path
+        fill="#fff"
+        d="M119.37 144.75 75.43 62.43h20.08l25.85 52.09c.4.93.86 1.89 1.39 2.88.53.99 1 2.02 1.39 3.08.27.4.47.76.6 1.1.13.33.26.63.4.89.66 1.33 1.26 2.62 1.79 3.88.53 1.26.99 2.42 1.39 3.48 1.06-2.25 2.22-4.67 3.48-7.26 1.26-2.58 2.55-5.27 3.88-8.05l26.24-52.09h18.69l-44.34 83.31v53.09h-16.9z"
+      />
+    </svg>
+  );
+}
+
+function PhoneGlyph() {
+  return (
+    <path
+      transform="translate(47,47) scale(0.105)"
+      fill="#E0342A"
+      d="M231.88 175.08A56.26 56.26 0 0 1 176 224C96.6 224 32 159.4 32 80a56.26 56.26 0 0 1 48.92-55.88a16 16 0 0 1 16.62 9.52l21.12 47.15v.12A16 16 0 0 1 117.39 96c-.18.27-.37.52-.57.77L96 121.45c7.49 15.22 23.41 31 38.83 38.51l24.34-20.71a8 8 0 0 1 .75-.56a16 16 0 0 1 15.17-1.4l.13.06l47.11 21.11a16 16 0 0 1 9.55 16.62"
+    />
+  );
+}
 
 export default function Home() {
-  const OPTIONS: EmblaOptionsType = { loop: true }
+  const [showTop, setShowTop] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const heroRef = useRef<HTMLElement>(null);
 
-  const cards: ReactNode[] = [
-    <Card key="card-1" className="bg-[#2f2f31] border-none shadow-none">
-      <CardContent className="w-80">
-        <video
-          src="./boxtype-demo-54.mp4"
-          autoPlay
-          loop
-          muted
-          className="rounded-lg"
-        />
-        <div className="text-xl text-white">
-          BOXTYPE
-        </div>
+  // enable hide-then-reveal once JS is active (SSR shows full content)
+  useEffect(() => {
+    document.documentElement.classList.add("anim");
+    return () => document.documentElement.classList.remove("anim");
+  }, []);
 
-      </CardContent>
-    </Card>,
+  // sticky condensed header after hero scrolls out
+  useEffect(() => {
+    const onScroll = () => {
+      const h = heroRef.current?.offsetHeight ?? window.innerHeight;
+      setShowTop(window.scrollY > h - 80);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    onScroll();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
+  }, []);
 
-    <Card key="card-2" className="bg-[#2f2f31] border-none shadow-none">
-      <CardContent>
-        <div className="flex items-center justify-center">
-          <Image
-            className="drop-shadow-md"
-            src="/bracelet-mobile.png"
-            alt="text illustration"
-            width={100}
-            height={100}
-          />
-        </div>
+  const closeMenu = () => setMenuOpen(false);
 
-
-        <div className="flex flex-row gap-2 items-center justify-center mt-4 text-xl text-white">
-          <Image
-            src="/BraceletIcon-v1.0.2-4x.png"
-            alt="text illustration"
-            width={50}
-            height={50}
-          /><span>BRACELET <p className="text-xs text-white">tool for long-term curation & study</p></span>
-        </div>
-      </CardContent>
-    </Card>,
-
-    <Card key="card-3">
-      <CardHeader>
-        <CardTitle>Third</CardTitle>
-        <CardDescription>Description</CardDescription>
-      </CardHeader>
-      <CardContent>Content</CardContent>
-    </Card>,
-    <Card key="card-4">
-      <CardHeader>
-        <CardTitle>Fourth</CardTitle>
-        <CardDescription>Description</CardDescription>
-      </CardHeader>
-      <CardContent>Content</CardContent>
-    </Card>,
-
-    <Card key="card-5">
-      <CardHeader>
-        <CardTitle>Fifth</CardTitle>
-        <CardDescription>Description</CardDescription>
-      </CardHeader>
-      <CardContent>Content</CardContent>
-    </Card>,
-
-    <Card key="card-6">
-      <CardHeader>
-        <CardTitle>Sixth</CardTitle>
-        <CardDescription>Description</CardDescription>
-      </CardHeader>
-      <CardContent>Content</CardContent>
-    </Card>,
-  ]
   return (
-    <div>
-      <main>
-        <div className="fixed w-full top-0 left-0 z-50">
-          <div className="relative flex flex-row justify-center items-center">
-            <div className="absolute top-7 invisible lg:visible">
-              <Image
-                src="/boat-desktop.png"
-                alt="header boat illustration"
-                width={59.8}
-                height={33.2}
+    <>
+      {/* ===== STICKY CONDENSED HEADER ===== */}
+      <div className={`topbar ${showTop ? "show" : ""}`}>
+        <a href="#top">
+          <Wordmark />
+        </a>
+        <nav>
+          <a href="#products" className="nl">
+            Products
+          </a>
+          <a href="#studio" className="nl">
+            Studio
+          </a>
+          <a href="#work" className="nl">
+            Work
+          </a>
+          <a
+            href="#book"
+            className="pill dark"
+            style={{ padding: "8px 16px", fontSize: 13 }}
+          >
+            Book a call <span className="arr">→</span>
+          </a>
+        </nav>
+      </div>
+
+      {/* ===== MOBILE MENU ===== */}
+      <div className={`mmenu ${menuOpen ? "open" : ""}`}>
+        <div className="top">
+          <Wordmark style={{ fontSize: 20 }} />
+          <button className="close" aria-label="Close" onClick={closeMenu}>
+            ✕
+          </button>
+        </div>
+        <nav>
+          <a href="#products" onClick={closeMenu}>
+            Products<span className="o">.</span>
+          </a>
+          <a href="#studio" onClick={closeMenu}>
+            Studio<span className="o">.</span>
+          </a>
+          <a href="#work" onClick={closeMenu}>
+            Work<span className="o">.</span>
+          </a>
+          <a href="#faq" onClick={closeMenu}>
+            FAQ<span className="o">.</span>
+          </a>
+          <a href="#book" onClick={closeMenu}>
+            Book a call<span className="o">.</span>
+          </a>
+        </nav>
+        <div className="mfoot">
+          <span>hello[at]boat3000.co</span>
+          <span>● open · 5 jan &apos;26</span>
+        </div>
+      </div>
+
+      <a id="top" />
+
+      {/* ===== HERO ===== */}
+      <header className="hero wrap" ref={heroRef}>
+        <div className="masthead">
+          <a href="#top" className="mk">
+            <Wordmark />
+          </a>
+          <nav className="nav-index">
+            <a href="#products">Products</a>
+            <a href="#studio">Studio</a>
+            <a href="#work">Work</a>
+            <a href="#faq">Process</a>
+          </nav>
+          <div className="office">
+            <b>Studio · open</b>
+            <br />
+            <span className="dotline">
+              <span className="dot" /> bookings from 5 jan &apos;26
+            </span>
+            <br />
+            <a href="#book" className="ulink">
+              hello[at]boat3000.co
+            </a>
+          </div>
+          <button
+            className="hamb"
+            aria-label="Menu"
+            onClick={() => setMenuOpen(true)}
+          >
+            <span />
+          </button>
+        </div>
+
+        <div className="hero-body">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className="hero-boat"
+            src="/boat.png"
+            alt="BOAT3000 red paper boat"
+          />
+
+          <h1>
+            The
+            <span className="lf-ins">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="lf-insert"
+                src="/local-first.png"
+                alt="local-first"
               />
-            </div>
+            </span>{" "}
+            Studio
+            <br />
+            that ships. <span className="ghost">Weekly.</span>
+          </h1>
+
+          <div className="hero-foot">
+            <p>
+              We design, brand, and build beautiful software for you.
+              <br />
+              We love <span className="blue">**</span>products that work
+              offline, even on a boat in the middle of the ocean. We ship
+              products that work for you.
+            </p>
+            <a href="#book" className="pill dark">
+              Book a call <span className="arr">→</span>
+            </a>
           </div>
-          <div className="relative flex flex-row items-center justify-between pt-4 pb-4 bg-none text-white">
-            <div className="ml-4">
-              <div className="font-header text-xl">
-                <span className="text-white font-bold backdrop-blur-lg">LOCALBOAT<span className="text-blue-400">:</span></span><br />
-                <span className="text-black backdrop-blur-lg"><span className="text-blue-400">:</span>STUDIO</span>
+        </div>
+      </header>
+
+      {/* ===== TICKER ===== */}
+      <div className="ticker">
+        <TickerRun />
+      </div>
+
+      {/* ===== PRODUCTS ===== */}
+      <section className="products sec-pad" id="products">
+        <div className="wrap">
+          <Reveal className="sec-head">
+            <span className="idx">01 /</span>
+            <h2>Some of our products</h2>
+          </Reveal>
+          <div className="prod-grid">
+            <Reveal>
+              <p className="prod-lead">
+                We build products we&apos;d love to pay for.{" "}
+                <span className="red">We also build for clients.</span>
+              </p>
+              <div className="prod-list">
+                <div className="prod-item">
+                  <span className="pname">BOXTYPE</span>
+                  <span className="pdesc">
+                    a small tool for type &amp; the box model
+                  </span>
+                  <span className="pmeta">studio release</span>
+                </div>
+                <div className="prod-item">
+                  <span className="pname">BRACELET</span>
+                  <span className="pdesc">long-term curation &amp; study</span>
+                  <span className="pmeta live">v1.0.2 · live</span>
+                </div>
+                <div className="prod-item">
+                  <span className="pname">In the slate</span>
+                  <span className="pdesc">
+                    two more tools, shipping through &apos;26
+                  </span>
+                  <span className="pmeta">soon</span>
+                </div>
               </div>
-            </div>
-            <div className="mr-4">
-              <div className="flex justify-center items-center h-[60] w-[60] lg:h-[60] lg:w-[60]">
-                <svg width="300" height="300" viewBox="0 0 300 300">
-                  <defs>
-                    <path
-                      id="circlePath"
-                      d="M150,150 m-120,0 a120,120 0 1,1 240,0 a120,120 0 1,1 -240,0"
+            </Reveal>
+
+            {/* fanned specimen stage */}
+            <Reveal className="stage">
+              <div className="spec v1">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/bracelet-mobile.png" alt="BRACELET mobile" />
+              </div>
+              <div className="spec v2">
+                <video
+                  src="/boxtype-demo.mp4"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              </div>
+              <div className="spec v3">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/bracelet-mobile-2.png" alt="BRACELET study view" />
+              </div>
+              <span className="tag">
+                BOXTYPE · BRACELET · studio releases
+              </span>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== STUDIO + PROCESS ===== */}
+      <section className="studio sec-pad" id="studio">
+        <div className="gridlines" />
+        <div className="wrap">
+          <Reveal className="sec-head">
+            <span className="idx">02 /</span>
+            <h2>The studio</h2>
+          </Reveal>
+          <div className="studio-grid">
+            <Reveal className="about">
+              <p className="lede">
+                Hello, this is{" "}
+                <span className="wordmark" style={{ fontSize: "inherit", display: "inline" }}>
+                  BOAT3<span className="o">0</span>00
+                </span>
+                , a dev &amp; design studio for B2B, AI &amp; Web3 founders.
+              </p>
+              <p>
+                We build products we&apos;d love to pay for, and we build for
+                clients too. We&apos;ve worked with teams featured by
+                Y&nbsp;Combinator, TechCrunch, Forbes and the BBC.
+              </p>
+              <p>
+                We work in weekly sprints. It&apos;s deep, collaborative work,
+                the kind that ships beautiful experiences really quickly.{" "}
+                <span className="blue mono">**</span> local-first, and online
+                products too.{" "}
+                <span className="mono" style={{ color: "var(--ink-soft)" }}>
+                  * your offline is where important work can happen.
+                </span>
+              </p>
+              <div className="featured">
+                <div className="lab">Clients featured by</div>
+                <div className="logos">
+                  <span className="ic">
+                    <YcLogo />
+                    Combinator
+                  </span>
+                  <span className="ic">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/techcrunch.jpg"
+                      alt=""
+                      width={16}
+                      height={16}
+                      style={{ borderRadius: 3 }}
                     />
-                  </defs>
-
-                  {/* ROTATING GROUP */}
-                  <g className="spin-origin">
-                    <text fill="#fff" fontSize="32" letterSpacing="4">
-                      <textPath href="#circlePath" className="font-serif backdrop-blur-sm">
-                        BOOK A CALL • BOOK A CALL • BOOK A CALL •  ☆ ★ ⋆｡°✩
-                      </textPath>
-                    </text>
-                  </g>
-                  <svg
-                    x="130" y="125"
-                    xmlns="http://www.w3.org/2000/svg"
-                    transform="rotate(0) matrix(1 0 0 1 0 0)"
-                    width="40" height="40"
-                    viewBox="0 0 256 256">
-                    <path fill="red" d="M231.88 175.08A56.26 56.26 0 0 1 176 224C96.6 224 32 159.4 32 80a56.26 56.26 0 0 1 48.92-55.88a16 16 0 0 1 16.62 9.52l21.12 47.15v.12A16 16 0 0 1 117.39 96c-.18.27-.37.52-.57.77L96 121.45c7.49 15.22 23.41 31 38.83 38.51l24.34-20.71a8 8 0 0 1 .75-.56a16 16 0 0 1 15.17-1.4l.13.06l47.11 21.11a16 16 0 0 1 9.55 16.62"
-                    >
-                    </path>
-                  </svg>
-                </svg>
+                    TechCrunch
+                  </span>
+                  <span>Forbes</span>
+                  <span>BBC</span>
+                </div>
               </div>
-            </div>
+            </Reveal>
+
+            <Reveal className="proc">
+              <div className="step">
+                <div className="n">Step 1 · the call</div>
+                <p>
+                  You book a free 30-minute call so we understand your business
+                  and the specific problems you want solved.{" "}
+                  <a href="#book" className="ulink">
+                    Book it here
+                  </a>
+                  , or just text us.
+                </p>
+              </div>
+              <div className="step">
+                <div className="n">Step 2 · the agreement</div>
+                <p>
+                  We agree on timeline and scope, and create a project-file in
+                  your name that you have read-access to.
+                </p>
+              </div>
+              <div className="step">
+                <div className="n">Step 3 · the work</div>
+                <p>
+                  We carry you along daily as we work through the backlog. No
+                  big reveal at the end. You see progress as it happens.
+                  We&apos;re your partner at every step.
+                </p>
+              </div>
+              <div className="price">
+                <b>$5k per sprint</b> · most projects need 1–2 sprints
+                <br />
+                deliverables: developer-ready Figma, prototypes &amp; experience
+                docs
+                <br />
+                tools: Linear · Slack · Figma · Notion
+              </div>
+            </Reveal>
           </div>
         </div>
-        <Image
-          className="fixed right-4 top-24 -z-5 opacity-10 rounded-xl"
-          src="/kelly-sikkema-PtI07qwhQBI-unsplash.jpg"
-          alt="text illustration"
-          width={700}
-          height={1000}
-        />
-        <div className="my-24"></div>
-        <Card className="mb-1 md:w-1/2 lg:mb-1 lg:ml-4 lg:mr-4 lg:w-1/2 rounded-b-none  bg-gray-300 shadow-none">
-          <CardHeader>
-            <CardDescription className="text-red-500"><Input className="border-none bg-gray-100 cursor-not-allowed font-mono" placeholder="https://localhost:3000/*" /></CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-row">
-              <div className=" relative inline-block ">
-                <span className="text-4xl font-serif-gmd font-bold ">CRAFT</span><br />
-                <span className=" inline-block text-4xl font-serif-gmd font-bold ">FOCUSED</span>
-                <Image
-                  className="absolute -right-22 top-5"
-                  src="/local-first.png"
-                  alt="text illustration"
-                  width={100}
-                  height={70}
-                /><br />
-                <span className="text-4xl font-serif-gmd font-bold ">PRODUCT</span><br />
-                <span className="text-4xl font-serif-gmd font-bold ">STUDIO</span><br />
-              </div>
+      </section>
+
+      {/* ===== SELECTED WORK ===== */}
+      <section className="work sec-pad" id="work">
+        <div className="wrap">
+          <Reveal
+            className="sec-head"
+            style={{ justifyContent: "space-between", width: "100%" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+              <span className="idx">03 /</span>
+              <h2>Some of our designs</h2>
             </div>
-          </CardContent>
-          <CardFooter>
-            <div className="font-mono text-muted-foreground text-sm"><span className="text-blue-400">**</span>local-first & online products too.<br />* your offline is where important work can happen.</div>
-          </CardFooter>
-        </Card>
-        <br />
-        <Card className="rounded-none h-fit border-none bg-[#2f2f31] mb-4 lg:mx-4 lg:mt-1">
-          <CardHeader className="justify-center">
-            <CardDescription>
-              <a className="flex flex-row items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" className="inline-block">
-                  <defs>
-                    <rect width="30" height="30" x="0" y="0"></rect>
-                  </defs>
-                  <g>
-                    <g transform="matrix(0.24650000035762787,0,0,0.24650000035762787,80.07599639892578,25.10649871826172)" opacity="0.46049999999998514">
-                      <g opacity="1" transform="matrix(1,0,0,1,-264,-40.75)">
-                        <path fill="rgb(0,190,63)" fillOpacity="1" d=" M0,-33.5 C18.488649368286133,-33.5 33.5,-18.488649368286133 33.5,0 C33.5,18.488649368286133 18.488649368286133,33.5 0,33.5 C-18.488649368286133,33.5 -33.5,18.488649368286133 -33.5,0 C-33.5,-18.488649368286133 -18.488649368286133,-33.5 0,-33.5z">
-                        </path>
-                      </g>
-                    </g>
-                    <g transform="matrix(0.20000000298023224,0,0,0.20000000298023224,67.80000305175781,23.200000762939453)" opacity="1">
-                      <g opacity="1" transform="matrix(1,0,0,1,-264,-40.75)">
-                        <path fill="rgb(0,190,63)" fillOpacity="1" d=" M0,-33.5 C18.488649368286133,-33.5 33.5,-18.488649368286133 33.5,0 C33.5,18.488649368286133 18.488649368286133,33.5 0,33.5 C-18.488649368286133,33.5 -33.5,18.488649368286133 -33.5,0 C-33.5,-18.488649368286133 -18.488649368286133,-33.5 0,-33.5z">
-                        </path>
-                      </g>
-                    </g>
-                  </g>
-                </svg>
-                <span>BOOKINGS AVAILABLE FROM 5TH JAN. &apos;26</span>
-              </a>
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="pl-6">
-            <div className="flex flex-col justify-center md:justify-center lg:flex-row gap-8">
-              <div className="flex flex-col items-start md:items-center lg:items-start">
-                <span className="text-gray-300">SOME OF OUR PRODUCTS:</span>
-                <div className="my-6"></div>
-                {/* <DualStackCarousel/> */}
-                {/* <InfiniteScrollCarousel/> */}
-                <EmblaCarousel slides={cards} options={OPTIONS} />
-              </div>
-              {/* <div className="flex flex-col justify-center md:justify-center lg:flex-row lg:justify-between gap-4"> */}
-              <div className="text-gray-300 pr-0 max-w-119 mx-auto lg:items-center">
-                <span>Hello, This is <span className="font-header">Localboat</span>;<br /><br />
-                  a dev and design studio that designs, brands, and builds for B2B, Web3, & AI startups.</span><br />
-                {/* <span></span><br /> */}
-                <br />
-                We build products we&apos;d love to pay for— we also build for clients.<br /><br />
-                We&apos;ve worked with clients that have been featured by <span className="inline-flex items-baseline gap-1"><span className="w-3 h-3 inline-flex"><svg viewBox="0 0 256 256" version="1.1" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid">
-                  <g>
-                    <rect fill="#FB651E" x="0" y="0" width="256" height="256"></rect>
-                    <path d="M119.373653,144.745813 L75.43296,62.4315733 L95.5144533,62.4315733 L121.36192,114.52416 C121.759575,115.452022 122.2235,116.413008 122.753707,117.407147 C123.283914,118.401285 123.747838,119.428546 124.145493,120.48896 C124.410597,120.886615 124.609422,121.251127 124.741973,121.582507 C124.874525,121.913886 125.007075,122.212123 125.139627,122.477227 C125.802386,123.802744 126.39886,125.095105 126.929067,126.354347 C127.459274,127.613589 127.923198,128.773399 128.320853,129.833813 C129.381268,127.580433 130.541078,125.1614 131.80032,122.57664 C133.059562,119.99188 134.351922,117.307747 135.67744,114.52416 L161.92256,62.4315733 L180.612267,62.4315733 L136.27392,145.739947 L136.27392,198.826667 L119.373653,198.826667 L119.373653,144.745813 Z" fill="#FFFFFF"></path>
-                  </g>
-                </svg></span>Combinator</span>, <span className="inline-flex items-baseline gap-1">
-                <Image
-                  className=""
-                  src="/techcrunch.jpg"
-                  alt="text illustration"
-                  width={12}
-                  height={12}
-                />TechCrunch</span>, Forbes, BBC, and many more.<br /><br />
-                We work in weekly sprints.
-
-                It&apos;s deep, collaborative work -
-                the kind that ships beautiful experiences really quickly.<br /><br />
-
-                $5k per sprint  ·  Most projects need 1-2 sprints
-                <br />
-                <br />
-                We&apos;d love to hear about your project.<br /><br />
-                <p className="text-red-400">***</p>
-              </div>
-              <div className="text-gray-500 max-w-98 mx-auto">
-                <span className="text-gray-300">Our Process—</span><br />
-                <span className="text-red-400">Step 1</span><br />
-                You book a free 30-minute call with us to understand your needs. <a href="" className="underline decoration-1">You can do that here.</a> <a href="" className="underline decoration-1">Or just text us here.</a>
-                <br />
-                <br />
-                We get to understand the details of your business and the specific problems you want solved.
-                <br />
-                <br />
-                <span className="text-red-400">Step 2</span><br />
-                We come to an agreement on the timeline and scope of the project.<br /><br />
-
-                We create a project-file in your name. Of which you have read-access to.<br /><br />
-
-                <span className="text-red-400">Step 3</span><br />
-                We carry you along daily as we work through your backlog. We’re your partner at each step of the way.
-                <br />
-                <br />
-                <a href="" className="underline decoration-1"><span className="text-blue-400">→</span> Book a call to discuss your project today.</a>
-              </div>
-              {/* </div> */}
+            <a href="#book" className="pill" style={{ alignSelf: "center" }}>
+              View the deck <span className="arr">↗</span>
+            </a>
+          </Reveal>
+          <Reveal className="gal">
+            <div className="shot big">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/mockup-1.png" alt="commissioned product work" />
+              <span className="cap">Fund composition · Web3</span>
             </div>
-          </CardContent>
-          <CardFooter>
-            <div className="m-4"></div>
-          </CardFooter>
-        </Card>
-        <div className="my-10"></div>
-        <Card className="rounded-none h-fit border-none bg-gray-200 mb-4 lg:mx-4 lg:mt-1">
-          <CardHeader className="justify-center">
-            <CardDescription>
-              <div className="flex flex-row gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                  transform="rotate(0) matrix(1 0 0 1 0 0)"
-                  width="20" height="20" viewBox="0 0 256 256">
-                  <path fill="rgb(234, 57, 57)"
-                    d="M219.71 117.38a12 12 0 0 0-7.25-8.52l-51.18-20.47l10.59-70.61a12 12 0 0 0-20.64-10l-112 120a12 12 0 0 0 4.31 19.33l51.18 20.47l-10.59 70.64a12 12 0 0 0 20.64 10l112-120a12 12 0 0 0 2.94-10.84M113.6 203.55l6.27-41.77a12 12 0 0 0-7.41-12.92l-43.72-17.49l73.66-78.92l-6.27 41.77a12 12 0 0 0 7.41 12.92l43.72 17.49Z">
-                  </path>
-                </svg>
-                <p>SOME OF OUR DESIGNS —
-                  <a className="text-black">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                      className="inline"
-                      width="24" height="24"
-                      viewBox="0 0 24 24"
-                      fill="none" stroke="rgb(0, 0, 0)"
-                      strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"
-                    >
-                      <path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z" />
-                      <path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z" />
-                      <path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z" />
-                      <path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z" />
-                      <path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z" />
-                    </svg>DECK
-                    <svg
-                      className="inline"
-                      xmlns="http://www.w3.org/2000/svg"
-                      transform="rotate(0) matrix(1 0 0 1 0 0)"
-                      width="24" height="24" viewBox="0 0 256 256">
-                      <path fill="rgb(0, 0, 0)" d="M200 64v104a8 8 0 0 1-16 0V83.31L69.66 197.66a8 8 0 0 1-11.32-11.32L172.69 72H88a8 8 0 0 1 0-16h104a8 8 0 0 1 8 8">
-                      </path>
-                    </svg></a></p></div>
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex justify-center">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                <div className="flex items-center justify-center">
-                  <Image
-                    className="drop-shadow-md"
-                    src="/bracelet-mobile.png"
-                    alt="text illustration"
-                    width={200}
-                    height={200}
-                  />
-                </div>
-                <div className="flex items-center justify-center">
-                  <Image
-                    className="rounded-sm shadow-md"
-                    src="/bracelet-desktop.png"
-                    alt="text illustration"
-                    width={500}
-                    height={100}
-                  />
-                </div>
-                <div className="flex items-center justify-center">
-                  <Image
-                    className="drop-shadow-md"
-                    src="/bracelet-mobile-2.png"
-                    alt="text illustration"
-                    width={200}
-                    height={200}
-                  />
-                </div>
-                <div className="flex items-center justify-center">
-                  <Image
-                    className="rounded-sm shadow-md"
-                    src="/mockup-1.png"
-                    alt="text illustration"
-                    width={500}
-                    height={500}
-                  />
-                </div>
-                <div className="flex items-center justify-center">
-                  <Image
-                    className="rounded-sm shadow-md"
-                    src="/mockup-2.png"
-                    alt="text illustration"
-                    width={500}
-                    height={500}
-                  />
-                </div>
-                <div className="flex items-center justify-center">
-                  <Image
-                    className="rounded-sm shadow-md"
-                    src="/mockup-3.png"
-                    alt="text illustration"
-                    width={500}
-                    height={500}
-                  />
-                </div>
-              </div>
+            <div className="shot tall">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/bracelet-mobile.png" alt="mobile study app" />
+              <span className="cap">Study app · iOS</span>
             </div>
+            <div className="shot half">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/bracelet-desktop.png" alt="desktop landing" />
+              <span className="cap">Bracelet · landing</span>
+            </div>
+            <div className="shot half">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/mockup-2.png" alt="audio model dashboard" />
+              <span className="cap">Whisper models · macOS</span>
+            </div>
+            <div className="shot tall">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/bracelet-mobile-2.png" alt="study tracks" />
+              <span className="cap">Study tracks · iOS</span>
+            </div>
+            <div className="shot big">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/mockup-3.png" alt="dark product ui" />
+              <span className="cap">Asset pool · dashboard</span>
+            </div>
+          </Reveal>
+        </div>
+      </section>
 
-          </CardContent>
-          <CardFooter>
-            <div className="m-4"></div>
-          </CardFooter>
-        </Card>
-        <div className="my-10"></div>
-        <div className="flex flex-col items-center bg-[#2f2f31] w-full">
-          <div className="mt-6">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="30" height="30" className="inline-block">
-              <defs>
-                <rect width="30" height="30" x="0" y="0"></rect>
-              </defs>
-              <g>
-                <g transform="matrix(0.24650000035762787,0,0,0.24650000035762787,80.07599639892578,25.10649871826172)" opacity="0.46049999999998514">
-                  <g opacity="1" transform="matrix(1,0,0,1,-264,-40.75)">
-                    <path fill="rgb(0,80,190)" fillOpacity="1" d=" M0,-33.5 C18.488649368286133,-33.5 33.5,-18.488649368286133 33.5,0 C33.5,18.488649368286133 18.488649368286133,33.5 0,33.5 C-18.488649368286133,33.5 -33.5,18.488649368286133 -33.5,0 C-33.5,-18.488649368286133 -18.488649368286133,-33.5 0,-33.5z">
-                    </path>
-                  </g>
-                </g>
-                <g transform="matrix(0.20000000298023224,0,0,0.20000000298023224,67.80000305175781,23.200000762939453)" opacity="1">
-                  <g opacity="1" transform="matrix(1,0,0,1,-264,-40.75)">
-                    <path fill="rgb(0,80,190)" fillOpacity="1" d=" M0,-33.5 C18.488649368286133,-33.5 33.5,-18.488649368286133 33.5,0 C33.5,18.488649368286133 18.488649368286133,33.5 0,33.5 C-18.488649368286133,33.5 -33.5,18.488649368286133 -33.5,0 C-33.5,-18.488649368286133 -18.488649368286133,-33.5 0,-33.5z">
-                    </path>
-                  </g>
-                </g>
-              </g>
-            </svg>
-            <span className="text-gray-500">FREQUENTLY ASKED QUESTIONS</span>
-          </div>
-          <div className="flex">
-            <Accordion type="single" collapsible className="w-66 mx-4 lg:w-md text-white my-10">
-              <AccordionItem value="item-1" className="border-none">
-                <AccordionTrigger>Can you handle branding, product, and website work?</AccordionTrigger>
-                <AccordionContent>
-                  Absolutely. Whether you need a new brand identity, a Framer/Webflow site, or a full product UX/UI overhaul, we’ve done it all — and fast. You can mix and match based on what matters most right now.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-3" className="border-none">
-                <AccordionTrigger>What is the deliverable during a project?</AccordionTrigger>
-                <AccordionContent>
-                  Developer-ready Figma files, interactive prototypes, and clear experience documentation.
-                  We focus on creating designs that are easy to implement, ensuring a smooth handoff to your development team.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-2" className="border-none">
-                <AccordionTrigger>How do you communicate during a project?</AccordionTrigger>
-                <AccordionContent>
-                  Linear, Slack, Figma, and Notion are our go-to tools for keeping everyone in the loop.
-                  We set up a dedicated Slack channel for real-time updates and quick questions. For task management and progress tracking, we use Linear to ensure everything stays organized. Figma is our primary tool for design collaboration, allowing you to see and comment on designs as they evolve. Finally, we document key decisions and project details in Notion, so you always have a reference point.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-4" className="border-none">
-                <AccordionTrigger>What is involved during a project?</AccordionTrigger>
-                <AccordionContent>
-                  Daily collaboration. You see progress as it happens, no big reveal at the end.
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="item-5" className="border-none">
-                <AccordionTrigger>How long does it take?</AccordionTrigger>
-                <AccordionContent>
-                  5 days. Monday to Friday. We work in focused sprints to deliver high-quality results quickly.
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+      {/* ===== FAQ ===== */}
+      <section className="faq sec-pad" id="faq">
+        <div className="wrap">
+          <div className="faq-grid">
+            <Reveal className="side">
+              <div className="sec-head" style={{ marginBottom: 0 }}>
+                <span className="idx">04 /</span>
+                <h2>FAQ</h2>
+              </div>
+              <p>
+                Everything else lives on the call. <span className="red">**</span>{" "}
+                if it isn&apos;t here, ask us directly.
+              </p>
+            </Reveal>
+            <Reveal>
+              {FAQS.map((qa, i) => (
+                <FaqItem key={i} qa={qa} defaultOpen={i === 0} />
+              ))}
+            </Reveal>
           </div>
         </div>
-      </main>
-      <footer className="flex pt-6 pb-6 border-t border-zinc-500 border-solid w-full text-white bg-[#2f2f31]">
-        <div className="flex flex-col gap-4 items-center w-full">
-          <div className="flex justify-center items-center h-[227.73px] w-[227.73px] lg:h-[227.73px] lg:w-[227.73px]">
-            <svg width="300" height="300" viewBox="0 0 300 300">
+      </section>
+
+      {/* ===== FOOTER ===== */}
+      <footer className="site-footer" id="book">
+        <div className="wrap">
+          <div className="foot-cta">
+            <svg
+              className="bcall"
+              width="150"
+              height="150"
+              viewBox="0 0 120 120"
+              aria-label="Book a call"
+            >
               <defs>
                 <path
-                  id="circlePath"
-                  d="M150,150 m-120,0 a120,120 0 1,1 240,0 a120,120 0 1,1 -240,0"
+                  id="bcfoot"
+                  d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"
                 />
               </defs>
-
-              {/* ROTATING GROUP */}
-              <g className="spin-origin">
-                <text className="fill-white" fontSize="28" letterSpacing="4">
-                  <textPath href="#circlePath" className="font-serif">
-                    BOOK A CALL • BOOK A CALL • BOOK A CALL • BOOK A CALL •
+              <g className="ring">
+                <text
+                  fontSize="10.5"
+                  fill="#F6F5F1"
+                  fontFamily="var(--font-mono), monospace"
+                >
+                  <textPath
+                    href="#bcfoot"
+                    textLength="289"
+                    lengthAdjust="spacingAndGlyphs"
+                  >
+                    BOOK A CALL · BOOK A CALL ·{" "}
                   </textPath>
                 </text>
               </g>
-              <svg
-                x="130" y="125"
-                xmlns="http://www.w3.org/2000/svg"
-                transform="rotate(0) matrix(1 0 0 1 0 0)"
-                width="40" height="40"
-                viewBox="0 0 256 256">
-                <path fill="red" d="M231.88 175.08A56.26 56.26 0 0 1 176 224C96.6 224 32 159.4 32 80a56.26 56.26 0 0 1 48.92-55.88a16 16 0 0 1 16.62 9.52l21.12 47.15v.12A16 16 0 0 1 117.39 96c-.18.27-.37.52-.57.77L96 121.45c7.49 15.22 23.41 31 38.83 38.51l24.34-20.71a8 8 0 0 1 .75-.56a16 16 0 0 1 15.17-1.4l.13.06l47.11 21.11a16 16 0 0 1 9.55 16.62"
-                >
-                </path>
-              </svg>
+              <PhoneGlyph />
             </svg>
-          </div>
-          <div>
-            <a href="#top">back up &uarr;</a>
-          </div>
-          <div className="flex flex-row text-sm ">
-            <a href="https://github.com/dco2" className="underline">
-              Github
-            </a>
-            &nbsp; &#124; &nbsp;
-            <a href="mailto:dco2.caleb@gmail.com" className="underline">
-              Email
-            </a>
-            &nbsp; &#124; &nbsp;
-            <a href="https://twitter.com/vocaldeathstar" className="underline">
-              Twitter
-            </a>
-          </div>
-          <div className="flex flex-col items-center text-[0.8rem]">
-            <div>
-              &#8482; 2024
+            <h3>
+              We&apos;d love to hear about{" "}
+              <a href="mailto:dco2.caleb@gmail.com">your project.</a>
+            </h3>
+            <div className="foot-links">
+              <a
+                href="https://github.com/dco2"
+                className="ulink"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Github
+              </a>
+              <span style={{ color: "var(--line-d)" }}>|</span>
+              <a href="mailto:dco2.caleb@gmail.com" className="ulink">
+                Email
+              </a>
+              <span style={{ color: "var(--line-d)" }}>|</span>
+              <a
+                href="https://twitter.com/vocaldeathstar"
+                className="ulink"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Twitter
+              </a>
             </div>
-            <div>
-              designed by Caleb &#8212;
-            </div>
-            <div>
-              in association with <a href="https://wasegun.com/" className="underline">wasegun! studio</a>
-            </div>
+          </div>
+
+          <div className="foot-bottom">
+            <a href="#top" className="ulink">
+              back up ↑
+            </a>
+            <span>™ 2026 · built at the BOAT3000 studio by Caleb.</span>
+            <span>local-first &amp; online · ✶</span>
           </div>
         </div>
+        <div className="giant" aria-hidden="true">
+          BOAT3<span className="o">0</span>00
+        </div>
       </footer>
-    </div>
+    </>
   );
 }
