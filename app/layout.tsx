@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
 
 import "./globals.css";
+import { SmoothScroll } from "@/app/components/SmoothScroll";
 
 const schibstedGrotesk = Schibsted_Grotesk({
   variable: "--font-grotesk",
@@ -73,6 +74,7 @@ export default function RootLayout({
       <body
         className={`${schibstedGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <SmoothScroll />
         {children}
       </body>
     </html>
