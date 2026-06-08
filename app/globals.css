@@ -2064,22 +2064,14 @@ section {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: radial-gradient(
-    120% 120% at 50% 0%,
-    #1b1a16 0%,
-    #14130f 58%,
-    #0d0c0a 100%
-  );
+  background: var(--ink);
   color: var(--paper);
 }
 .poster-mark {
   font-weight: 800;
   letter-spacing: -0.03em;
   font-size: clamp(26px, 5vw, 60px);
-  background: linear-gradient(90deg, var(--blue), var(--red));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--paper);
 }
 .poster-soon {
   font-size: 11px;
