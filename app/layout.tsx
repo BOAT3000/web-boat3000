@@ -15,7 +15,7 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://boat3000.co";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://boat3000.studio";
 const title = "BOAT3000 · Craft-focused product studio";
 const description =
   "BOAT3000 is a craft-focused dev & design studio for B2B, AI & Web3 founders. We design, brand, and build beautiful software in weekly sprints.";
