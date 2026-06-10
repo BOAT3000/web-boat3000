@@ -296,12 +296,15 @@ export default function Home() {
         </div>
 
         <div className="hero-body">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="hero-boat"
-            src="/boat.png"
-            alt="BOAT3000 red paper boat"
-          />
+          <div className="hero-boat-scene">
+            <span className="hero-water" aria-hidden="true" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="hero-boat"
+              src="/boat.png"
+              alt="BOAT3000 red paper boat"
+            />
+          </div>
 
           <h1>
             The
@@ -313,18 +316,19 @@ export default function Home() {
                 alt="local-first"
               />
             </span>{" "}
-            Studio
+            Studio.
             <br />
-            that ships. <span className="ghost">Weekly.</span>
+            good taste meets <span className="ghost">functional.</span>
           </h1>
 
           <div className="hero-foot">
-            <p>
-              We design, brand, and build beautiful software for you.
-              <br />
-              We love <span className="blue">**</span>products that work
-              offline, even on a boat in the middle of the ocean. We ship
-              products that work for you.
+            <p className="hero-copy">
+              <span>We design, brand, and build beautiful software for you.</span>
+              <span>
+                We love <span className="blue">**</span>products that work
+                offline, even at sea.
+              </span>
+              <span>We ship products that work for you.</span>
             </p>
             <Link href="/contact" className="pill dark">
               Book a call <span className="arr">→</span>
@@ -626,7 +630,7 @@ export default function Home() {
             </h3>
             <div className="foot-links">
               <a
-                href="https://github.com/dco2"
+                href="https://github.com/BOAT3000/"
                 className="ulink"
                 target="_blank"
                 rel="noreferrer"
@@ -639,7 +643,7 @@ export default function Home() {
               </a>
               <span style={{ color: "var(--line-d)" }}>|</span>
               <a
-                href="https://twitter.com/vocaldeathstar"
+                href="https://x.com/localboatstudio"
                 className="ulink"
                 target="_blank"
                 rel="noreferrer"
