@@ -6,6 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import Link from "next/link";
 
 /* ---------- wordmark ---------- */
 function Wordmark({
@@ -213,19 +214,19 @@ export default function Home() {
           <a href="#products" className="nl">
             Products
           </a>
-          <a href="#studio" className="nl">
+          <Link href="/studio" className="nl">
             Studio
-          </a>
-          <a href="#work" className="nl">
+          </Link>
+          <Link href="/work" className="nl">
             Work
-          </a>
-          <a
-            href="#book"
+          </Link>
+          <Link
+            href="/contact"
             className="pill dark"
             style={{ padding: "8px 16px", fontSize: 13 }}
           >
             Book a call <span className="arr">→</span>
-          </a>
+          </Link>
         </nav>
       </div>
 
@@ -241,21 +242,21 @@ export default function Home() {
           <a href="#products" onClick={closeMenu}>
             Products<span className="o">.</span>
           </a>
-          <a href="#studio" onClick={closeMenu}>
+          <Link href="/studio" onClick={closeMenu}>
             Studio<span className="o">.</span>
-          </a>
-          <a href="#work" onClick={closeMenu}>
+          </Link>
+          <Link href="/work" onClick={closeMenu}>
             Work<span className="o">.</span>
-          </a>
-          <a href="#faq" onClick={closeMenu}>
-            FAQ<span className="o">.</span>
-          </a>
-          <a href="#book" onClick={closeMenu}>
+          </Link>
+          <Link href="/process" onClick={closeMenu}>
+            Process<span className="o">.</span>
+          </Link>
+          <Link href="/contact" onClick={closeMenu}>
             Book a call<span className="o">.</span>
-          </a>
+          </Link>
         </nav>
         <div className="mfoot">
-          <span>hello[at]boat3000.co</span>
+          <span>hello@boat3000.studio</span>
           <span>● open · 5 jan &apos;26</span>
         </div>
       </div>
@@ -270,9 +271,9 @@ export default function Home() {
           </a>
           <nav className="nav-index">
             <a href="#products">Products</a>
-            <a href="#studio">Studio</a>
-            <a href="#work">Work</a>
-            <a href="#faq">Process</a>
+            <Link href="/studio">Studio</Link>
+            <Link href="/work">Work</Link>
+            <Link href="/process">Process</Link>
           </nav>
           <div className="office">
             <b>Studio · open</b>
@@ -281,8 +282,8 @@ export default function Home() {
               <span className="dot" /> bookings from 5 jan &apos;26
             </span>
             <br />
-            <a href="#book" className="ulink">
-              hello[at]boat3000.co
+            <a href="mailto:hello@boat3000.studio" className="ulink">
+              hello@boat3000.studio
             </a>
           </div>
           <button
@@ -295,12 +296,15 @@ export default function Home() {
         </div>
 
         <div className="hero-body">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="hero-boat"
-            src="/boat.png"
-            alt="BOAT3000 red paper boat"
-          />
+          <div className="hero-boat-scene">
+            <span className="hero-water" aria-hidden="true" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="hero-boat"
+              src="/boat.png"
+              alt="BOAT3000 red paper boat"
+            />
+          </div>
 
           <h1>
             The
@@ -312,22 +316,23 @@ export default function Home() {
                 alt="local-first"
               />
             </span>{" "}
-            Studio
+            Studio.
             <br />
-            that ships. <span className="ghost">Weekly.</span>
+            good taste meets <span className="ghost">functional.</span>
           </h1>
 
           <div className="hero-foot">
-            <p>
-              We design, brand, and build beautiful software for you.
-              <br />
-              We love <span className="blue">**</span>products that work
-              offline, even on a boat in the middle of the ocean. We ship
-              products that work for you.
+            <p className="hero-copy">
+              <span>We design, brand, and build beautiful software for you.</span>
+              <span>
+                We love <span className="blue">**</span>products that work
+                offline, even at sea.
+              </span>
+              <span>We ship products that work for you.</span>
             </p>
-            <a href="#book" className="pill dark">
+            <Link href="/contact" className="pill dark">
               Book a call <span className="arr">→</span>
-            </a>
+            </Link>
           </div>
         </div>
       </header>
@@ -340,9 +345,17 @@ export default function Home() {
       {/* ===== PRODUCTS ===== */}
       <section className="products sec-pad" id="products">
         <div className="wrap">
-          <Reveal className="sec-head">
-            <span className="idx">01 /</span>
-            <h2>Some of our products</h2>
+          <Reveal
+            className="sec-head"
+            style={{ justifyContent: "space-between", width: "100%" }}
+          >
+            <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+              <span className="idx">01 /</span>
+              <h2>Studio releases</h2>
+            </div>
+            <Link href="/work" className="pill" style={{ alignSelf: "center" }}>
+              All work <span className="arr">→</span>
+            </Link>
           </Reveal>
           <div className="prod-grid">
             <Reveal>
@@ -351,25 +364,34 @@ export default function Home() {
                 <span className="red">We also build for clients.</span>
               </p>
               <div className="prod-list">
-                <div className="prod-item">
+                <Link href="/work/boxtype" className="prod-item">
                   <span className="pname">BOXTYPE</span>
                   <span className="pdesc">
-                    a small tool for type &amp; the box model
+                    a random-access editor for the box model
                   </span>
-                  <span className="pmeta">studio release</span>
-                </div>
-                <div className="prod-item">
-                  <span className="pname">BRACELET</span>
-                  <span className="pdesc">long-term curation &amp; study</span>
-                  <span className="pmeta live">v1.0.2 · live</span>
-                </div>
-                <div className="prod-item">
-                  <span className="pname">In the slate</span>
+                  <span className="pmeta">shipped</span>
+                </Link>
+                <Link href="/work/oculos" className="prod-item">
+                  <span className="pname">OCULOS</span>
                   <span className="pdesc">
-                    two more tools, shipping through &apos;26
+                    a retail operating system for shops
                   </span>
-                  <span className="pmeta">soon</span>
-                </div>
+                  <span className="pmeta live">live</span>
+                </Link>
+                <Link href="/work/bracelet" className="prod-item">
+                  <span className="pname">BRACELET</span>
+                  <span className="pdesc">
+                    anki × obsidian, networked study
+                  </span>
+                  <span className="pmeta">in dev</span>
+                </Link>
+                <Link href="/work/peakerspace" className="prod-item">
+                  <span className="pname">PEAKERSPACE</span>
+                  <span className="pdesc">
+                    communal listening, online &amp; off
+                  </span>
+                  <span className="pmeta">coming soon</span>
+                </Link>
               </div>
             </Reveal>
 
@@ -506,9 +528,9 @@ export default function Home() {
               <span className="idx">03 /</span>
               <h2>Some of our designs</h2>
             </div>
-            <a href="#book" className="pill" style={{ alignSelf: "center" }}>
-              View the deck <span className="arr">↗</span>
-            </a>
+            <Link href="/work" className="pill" style={{ alignSelf: "center" }}>
+              View all work <span className="arr">→</span>
+            </Link>
           </Reveal>
           <Reveal className="gal">
             <div className="shot big">
@@ -604,11 +626,11 @@ export default function Home() {
             </svg>
             <h3>
               We&apos;d love to hear about{" "}
-              <a href="mailto:dco2.caleb@gmail.com">your project.</a>
+              <a href="mailto:hello@boat3000.studio">your project.</a>
             </h3>
             <div className="foot-links">
               <a
-                href="https://github.com/dco2"
+                href="https://github.com/BOAT3000/"
                 className="ulink"
                 target="_blank"
                 rel="noreferrer"
@@ -616,12 +638,12 @@ export default function Home() {
                 Github
               </a>
               <span style={{ color: "var(--line-d)" }}>|</span>
-              <a href="mailto:dco2.caleb@gmail.com" className="ulink">
+              <a href="mailto:hello@boat3000.studio" className="ulink">
                 Email
               </a>
               <span style={{ color: "var(--line-d)" }}>|</span>
               <a
-                href="https://twitter.com/vocaldeathstar"
+                href="https://x.com/localboatstudio"
                 className="ulink"
                 target="_blank"
                 rel="noreferrer"

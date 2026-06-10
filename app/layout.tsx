@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
 
 import "./globals.css";
+import { SmoothScroll } from "@/app/components/SmoothScroll";
 
 const schibstedGrotesk = Schibsted_Grotesk({
   variable: "--font-grotesk",
@@ -15,7 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ["400", "500", "600"],
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://boat3000.co";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://boat3000.studio";
 const title = "BOAT3000 · Craft-focused product studio";
 const description =
   "BOAT3000 is a craft-focused dev & design studio for B2B, AI & Web3 founders. We design, brand, and build beautiful software in weekly sprints.";
@@ -73,6 +74,7 @@ export default function RootLayout({
       <body
         className={`${schibstedGrotesk.variable} ${jetbrainsMono.variable} antialiased`}
       >
+        <SmoothScroll />
         {children}
       </body>
     </html>
