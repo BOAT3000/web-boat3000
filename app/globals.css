@@ -836,28 +836,15 @@ section {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  /* a real square grid (both axes) — big, intentional cells, kept faint so
-     it reads as texture behind the text rather than a stray rule */
+  /* a real square grid (both axes) — big, intentional cells, kept very faint
+     so it reads as quiet texture behind the text. No edge mask: a partial
+     fade leaves half-lit "dangling" lines, so every line stays uniform. */
   --cell: clamp(84px, 9vw, 150px);
+  --grid-line: rgba(20, 19, 15, 0.04);
   background-image:
-    linear-gradient(to right, var(--line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
   background-size: var(--cell) var(--cell);
-  /* fade the grid in/out at the section edges so it never hard-stops */
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    #000 9%,
-    #000 91%,
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0,
-    #000 9%,
-    #000 91%,
-    transparent 100%
-  );
 }
 .studio .wrap {
   position: relative;
