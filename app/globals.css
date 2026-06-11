@@ -2093,6 +2093,18 @@ section {
     border-color 0.2s,
     background 0.2s;
 }
+/* selects: strip the native chevron and draw our own, tucked tight to the
+   right edge (global — every dropdown on the site uses .ct-field select). */
+.ct-field select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%231b1a16' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+}
 .ct-field textarea {
   resize: vertical;
   line-height: 1.5;
@@ -2102,7 +2114,7 @@ section {
 .ct-field textarea:focus {
   outline: none;
   border-color: var(--ink);
-  background: #fff;
+  background-color: #fff;
 }
 .ct-hp {
   position: absolute;
