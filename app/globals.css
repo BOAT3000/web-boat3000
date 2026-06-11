@@ -872,9 +872,8 @@ section {
   margin-top: 18px;
 }
 .featured {
-  margin-top: 40px;
+  margin-top: 48px;
   padding-top: 26px;
-  border-top: 1px solid var(--line);
 }
 .featured .lab {
   font-family: var(--mono);
@@ -900,11 +899,9 @@ section {
 }
 
 .proc .step {
-  padding: 22px 0;
-  border-top: 1px solid var(--line);
+  padding: 18px 0;
 }
 .proc .step:first-of-type {
-  border-top: none;
   padding-top: 0;
 }
 .proc .step .n {
