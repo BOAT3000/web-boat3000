@@ -4,10 +4,11 @@ import { useState } from "react";
 
 type Status = "idle" | "submitting" | "sent" | "error";
 
-/* Netlify Forms + the Next.js runtime don't mix when you POST straight to a
-   page route — the Next function swallows the request before Netlify's form
-   processor sees it. So we submit via fetch to "/" (a static path Netlify
-   intercepts) with the urlencoded body, then show our own confirmation. */
+/* Netlify Forms + the Next.js runtime don't mix when you POST to a page route
+   like "/" — the Next function swallows the request before Netlify's form
+   processor sees it (it just returns the page, 0 submissions recorded). We
+   POST to the static /__forms.html stub instead, which Netlify serves directly
+   and intercepts for form handling, then show our own confirmation. */
 export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
 
@@ -30,7 +31,7 @@ export function ContactForm() {
     ).toString();
 
     try {
-      const res = await fetch("/", {
+      const res = await fetch("/__forms.html", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body,

@@ -14,11 +14,24 @@ update `public/__forms.html` to match.
 
 ## 2. Submission (in the repo — done)
 
-`ContactForm.tsx` submits with `fetch("/", …)` as urlencoded data including
-`form-name=contact`. We post to `/` (a static path Netlify intercepts) rather
-than to the page route, because the Next.js function would otherwise swallow the
-POST before Netlify's form processor sees it. On success the form swaps to a
-thank-you message; there is no page navigation.
+`ContactForm.tsx` submits with `fetch("/__forms.html", …)` as urlencoded data
+including `form-name=contact`. We must POST to the **static `/__forms.html`
+stub**, not to a page route like `/`: the Next.js function owns `/` and
+swallows the POST (returns the page, records 0 submissions), whereas Netlify
+serves `/__forms.html` directly and intercepts it for form handling — a
+successful submission responds with Netlify's built-in "Thank you!" page. On
+success the form swaps to our own thank-you message; there is no page
+navigation.
+
+> Quick check from a terminal — this should return Netlify's "Thank you!" page,
+> and a submission should appear in the dashboard:
+>
+> ```
+> curl -X POST https://boat3000.studio/__forms.html \
+>   -H "Content-Type: application/x-www-form-urlencoded" \
+>   --data-urlencode "form-name=contact" --data-urlencode "name=Test" \
+>   --data-urlencode "email=test@example.com" --data-urlencode "message=hi"
+> ```
 
 ## 3. Email notifications (DASHBOARD — you must do this)
 
