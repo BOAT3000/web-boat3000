@@ -8,6 +8,8 @@ import {
 } from "react";
 import Link from "next/link";
 
+import { SiteFooter } from "@/app/components/SiteFooter";
+
 /* ---------- wordmark ---------- */
 function Wordmark({
   className = "",
@@ -162,16 +164,6 @@ function YcLogo() {
         d="M119.37 144.75 75.43 62.43h20.08l25.85 52.09c.4.93.86 1.89 1.39 2.88.53.99 1 2.02 1.39 3.08.27.4.47.76.6 1.1.13.33.26.63.4.89.66 1.33 1.26 2.62 1.79 3.88.53 1.26.99 2.42 1.39 3.48 1.06-2.25 2.22-4.67 3.48-7.26 1.26-2.58 2.55-5.27 3.88-8.05l26.24-52.09h18.69l-44.34 83.31v53.09h-16.9z"
       />
     </svg>
-  );
-}
-
-function PhoneGlyph() {
-  return (
-    <path
-      transform="translate(47,47) scale(0.105)"
-      fill="#E0342A"
-      d="M231.88 175.08A56.26 56.26 0 0 1 176 224C96.6 224 32 159.4 32 80a56.26 56.26 0 0 1 48.92-55.88a16 16 0 0 1 16.62 9.52l21.12 47.15v.12A16 16 0 0 1 117.39 96c-.18.27-.37.52-.57.77L96 121.45c7.49 15.22 23.41 31 38.83 38.51l24.34-20.71a8 8 0 0 1 .75-.56a16 16 0 0 1 15.17-1.4l.13.06l47.11 21.11a16 16 0 0 1 9.55 16.62"
-    />
   );
 }
 
@@ -591,80 +583,7 @@ export default function Home() {
       </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className="site-footer" id="book">
-        <div className="wrap">
-          <div className="foot-cta">
-            <svg
-              className="bcall"
-              width="150"
-              height="150"
-              viewBox="0 0 120 120"
-              aria-label="Book a call"
-            >
-              <defs>
-                <path
-                  id="bcfoot"
-                  d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"
-                />
-              </defs>
-              <g className="ring">
-                <text
-                  fontSize="10.5"
-                  fill="#F6F5F1"
-                  fontFamily="var(--font-mono), monospace"
-                >
-                  <textPath
-                    href="#bcfoot"
-                    textLength="289"
-                    lengthAdjust="spacingAndGlyphs"
-                  >
-                    BOOK A CALL · BOOK A CALL ·{" "}
-                  </textPath>
-                </text>
-              </g>
-              <PhoneGlyph />
-            </svg>
-            <h3>
-              We&apos;d love to hear about{" "}
-              <a href="mailto:hello@boat3000.studio">your project.</a>
-            </h3>
-            <div className="foot-links">
-              <a
-                href="https://github.com/BOAT3000/"
-                className="ulink"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Github
-              </a>
-              <span style={{ color: "var(--line-d)" }}>|</span>
-              <a href="mailto:hello@boat3000.studio" className="ulink">
-                Email
-              </a>
-              <span style={{ color: "var(--line-d)" }}>|</span>
-              <a
-                href="https://x.com/localboatstudio"
-                className="ulink"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Twitter
-              </a>
-            </div>
-          </div>
-
-          <div className="foot-bottom">
-            <a href="#top" className="ulink">
-              back up ↑
-            </a>
-            <span>™ 2026 · built at the BOAT3000 studio by Caleb.</span>
-            <span>local-first &amp; online · ✶</span>
-          </div>
-        </div>
-        <div className="giant" aria-hidden="true">
-          BOAT3<span className="o">0</span>00
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

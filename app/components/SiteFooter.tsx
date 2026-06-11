@@ -1,16 +1,20 @@
 import Link from "next/link";
 
-/* Reusable dark "book a call" footer for sub-pages.
-   Mirrors the home footer's craft without its personal links. */
+import { BackToTop } from "./BackToTop";
+
+/* Studio footer, shared across the homepage and every sub-page.
+   CTA band -> wrapping link columns -> legal bar -> giant wordmark.
+   The columns are a responsive grid so they never overflow on mobile. */
 export function SiteFooter() {
   return (
     <footer className="site-footer" id="book">
       <div className="wrap">
+        {/* ---- CTA ---- */}
         <div className="foot-cta">
           <svg
             className="bcall"
-            width="150"
-            height="150"
+            width="120"
+            height="120"
             viewBox="0 0 120 120"
             aria-label="Book a call"
           >
@@ -45,29 +49,53 @@ export function SiteFooter() {
             We&apos;d love to hear about{" "}
             <Link href="/contact">your project.</Link>
           </h3>
-          <div className="foot-links">
-            <Link href="/work" className="ulink">
-              Work
-            </Link>
-            <span style={{ color: "var(--line-d)" }}>|</span>
-            <Link href="/studio" className="ulink">
-              Studio
-            </Link>
-            <span style={{ color: "var(--line-d)" }}>|</span>
-            <Link href="/process" className="ulink">
-              Process
-            </Link>
-            <span style={{ color: "var(--line-d)" }}>|</span>
-            <Link href="/contact" className="ulink">
-              Contact
-            </Link>
-          </div>
+          <Link href="/contact" className="pill ghost-d">
+            Start a project <span className="arr">→</span>
+          </Link>
         </div>
 
+        {/* ---- link columns ---- */}
+        <nav className="foot-nav" aria-label="Footer">
+          <div className="foot-col">
+            <span className="foot-col-h mono">Explore</span>
+            <Link href="/work">Work</Link>
+            <Link href="/studio">Studio</Link>
+            <Link href="/process">Process</Link>
+            <Link href="/newsroom">Newsroom</Link>
+          </div>
+          <div className="foot-col">
+            <span className="foot-col-h mono">Products</span>
+            <Link href="/work/boxtype">BOXTYPE</Link>
+            <Link href="/work/oculos">Oculos</Link>
+            <Link href="/work/bracelet">Bracelet</Link>
+          </div>
+          <div className="foot-col">
+            <span className="foot-col-h mono">Connect</span>
+            <Link href="/contact">Contact</Link>
+            <a href="https://cal.com/boat3000" target="_blank" rel="noreferrer">
+              Book a call <span className="ext">↗</span>
+            </a>
+            <a href="mailto:hello@boat3000.studio">Email</a>
+            <a
+              href="https://github.com/BOAT3000/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              GitHub <span className="ext">↗</span>
+            </a>
+            <a
+              href="https://x.com/localboatstudio"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Twitter <span className="ext">↗</span>
+            </a>
+          </div>
+        </nav>
+
+        {/* ---- legal bar ---- */}
         <div className="foot-bottom">
-          <Link href="/" className="ulink">
-            home ↑
-          </Link>
+          <BackToTop />
           <span>
             ™ 2026 · BOAT3000 studio ·{" "}
             <Link href="/privacy" className="ulink">
