@@ -836,8 +836,28 @@ section {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: linear-gradient(to right, var(--line) 1px, transparent 1px);
-  background-size: calc(100% / 6) 100%;
+  /* a real square grid (both axes) — big, intentional cells, kept faint so
+     it reads as texture behind the text rather than a stray rule */
+  --cell: clamp(84px, 9vw, 150px);
+  background-image:
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: var(--cell) var(--cell);
+  /* fade the grid in/out at the section edges so it never hard-stops */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 9%,
+    #000 91%,
+    transparent 100%
+  );
 }
 .studio .wrap {
   position: relative;
@@ -1141,6 +1161,14 @@ section {
 .foot-bottom a {
   color: var(--paper);
 }
+.foot-top {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: var(--paper);
+  cursor: pointer;
+}
 .giant {
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -1284,7 +1312,7 @@ section {
     line-height: 1.5;
   }
   .studio .gridlines {
-    background-size: 50% 100%;
+    --cell: clamp(64px, 22vw, 100px);
   }
 }
 @media (max-width: 430px) {

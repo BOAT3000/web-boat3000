@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { BackToTop } from "./BackToTop";
+
 /* Studio footer, shared across the homepage and every sub-page.
    CTA band -> wrapping link columns -> legal bar -> giant wordmark.
    The columns are a responsive grid so they never overflow on mobile. */
@@ -93,9 +95,7 @@ export function SiteFooter() {
 
         {/* ---- legal bar ---- */}
         <div className="foot-bottom">
-          <Link href="/" className="ulink">
-            home ↑
-          </Link>
+          <BackToTop />
           <span>
             ™ 2026 · BOAT3000 studio ·{" "}
             <Link href="/privacy" className="ulink">
