@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 
 import { SiteHeader } from "@/app/components/SiteHeader";
 import { SiteFooter } from "@/app/components/SiteFooter";
+import { ContactForm } from "./ContactForm";
 
 export const metadata: Metadata = {
   title: "Start a project",
@@ -31,80 +32,8 @@ export default function ContactPage() {
         </section>
 
         <section className="wrap ct-grid">
-          {/* form — handled by Netlify Forms (no backend needed) */}
-          <form
-            className="ct-form"
-            name="contact"
-            method="POST"
-            data-netlify="true"
-            data-netlify-honeypot="bot-field"
-            action="/contact?sent=1"
-          >
-            <input type="hidden" name="form-name" value="contact" />
-            <p className="ct-hp">
-              <label>
-                Don&apos;t fill this out: <input name="bot-field" />
-              </label>
-            </p>
-
-            <div className="ct-row">
-              <label className="ct-field">
-                <span className="mono">Your name</span>
-                <input type="text" name="name" required autoComplete="name" />
-              </label>
-              <label className="ct-field">
-                <span className="mono">Email</span>
-                <input type="email" name="email" required autoComplete="email" />
-              </label>
-            </div>
-
-            <div className="ct-row">
-              <label className="ct-field">
-                <span className="mono">Company / product</span>
-                <input type="text" name="company" autoComplete="organization" />
-              </label>
-              <label className="ct-field">
-                <span className="mono">What do you need?</span>
-                <select name="project_type" defaultValue="">
-                  <option value="" disabled>
-                    Choose one…
-                  </option>
-                  <option>Product design (UX/UI)</option>
-                  <option>Branding &amp; identity</option>
-                  <option>Website (Framer / Webflow / custom)</option>
-                  <option>Full product build</option>
-                  <option>Something else</option>
-                </select>
-              </label>
-            </div>
-
-            <label className="ct-field">
-              <span className="mono">Rough budget</span>
-              <select name="budget" defaultValue="">
-                <option value="" disabled>
-                  Choose one…
-                </option>
-                <option>~$5k (one sprint)</option>
-                <option>$10k–$20k (a few sprints)</option>
-                <option>$20k+</option>
-                <option>Not sure yet</option>
-              </select>
-            </label>
-
-            <label className="ct-field">
-              <span className="mono">Tell us about it</span>
-              <textarea
-                name="message"
-                rows={5}
-                required
-                placeholder="What are you building, and what does success look like?"
-              />
-            </label>
-
-            <button type="submit" className="pill dark ct-submit">
-              Send it <span className="arr">→</span>
-            </button>
-          </form>
+          {/* form — submitted to Netlify Forms via fetch (see ContactForm) */}
+          <ContactForm />
 
           {/* aside */}
           <aside className="ct-aside">
