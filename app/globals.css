@@ -2312,3 +2312,127 @@ section {
     animation: none;
   }
 }
+
+/* =====================================================
+   NEWSROOM — index list + post
+===================================================== */
+.nr-list {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: clamp(80px, 10vw, 140px);
+}
+.nr-card {
+  display: grid;
+  grid-template-columns: 180px 1fr auto;
+  align-items: baseline;
+  gap: clamp(20px, 4vw, 56px);
+  padding: clamp(26px, 3.4vw, 40px) 0;
+  border-top: 1px solid var(--line);
+  transition: opacity 0.2s;
+}
+.nr-list .nr-card:last-child {
+  border-bottom: 1px solid var(--line);
+}
+.nr-card:hover {
+  opacity: 0.62;
+}
+.nr-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.nr-kind {
+  color: var(--accent-c, var(--red));
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.nr-card-text h2 {
+  font-size: clamp(22px, 2.8vw, 34px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+.nr-card-text p {
+  margin-top: 10px;
+  font-size: 15px;
+  line-height: 1.55;
+  color: #3c3b35;
+  max-width: 56ch;
+}
+.nr-read {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+/* ---- post ---- */
+.nr-article {
+  max-width: 720px;
+  padding-top: clamp(36px, 5vw, 64px);
+}
+.nr-eyebrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 24px;
+}
+.nr-article h1 {
+  font-size: clamp(34px, 6vw, 64px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+.nr-byline {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+}
+.nr-byline time::before {
+  content: "·";
+  margin-right: 14px;
+  color: var(--line-d);
+}
+.nr-body {
+  margin-top: clamp(32px, 4vw, 52px);
+}
+.nr-body p {
+  font-size: 17px;
+  line-height: 1.65;
+  color: #2b2a25;
+}
+.nr-body p + p {
+  margin-top: 22px;
+}
+.nr-body h2 {
+  font-size: clamp(20px, 2.4vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 40px 0 14px;
+}
+.nr-body blockquote {
+  margin: 32px 0;
+  padding-left: 22px;
+  border-left: 2px solid var(--accent-c, var(--red));
+  font-size: clamp(19px, 2.4vw, 24px);
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.nr-post .cs-next {
+  padding-top: clamp(48px, 6vw, 80px);
+  padding-bottom: clamp(80px, 10vw, 140px);
+}
+@media (max-width: 640px) {
+  .nr-card {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .nr-read {
+    display: none;
+  }
+}

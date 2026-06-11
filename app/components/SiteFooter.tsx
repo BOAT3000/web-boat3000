@@ -54,6 +54,10 @@ export function SiteFooter() {
               Studio
             </Link>
             <span style={{ color: "var(--line-d)" }}>|</span>
+            <Link href="/newsroom" className="ulink">
+              Newsroom
+            </Link>
+            <span style={{ color: "var(--line-d)" }}>|</span>
             <Link href="/process" className="ulink">
               Process
             </Link>
