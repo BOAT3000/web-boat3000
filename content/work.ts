@@ -20,6 +20,19 @@ export type MediaItem = {
   portrait?: boolean;
 };
 
+/** A demo scene captured both landscape (desktop) and vertical (mobile).
+   Media lives at /public/oculos/<key>-{wide,tall}.{mp4,av1.mp4,webp}. */
+export type Scene = {
+  /** file-path key + react key */
+  key: string;
+  /** who's at the keyboard, shown as the eyebrow */
+  role: string;
+  /** the one-line headline for the scene */
+  title: string;
+  /** the story the clip tells */
+  story: string;
+};
+
 export type Project = {
   /** url segment: /work/<slug> */
   slug: string;
@@ -49,6 +62,8 @@ export type Project = {
   outcome: string;
   stack: string[];
   gallery?: MediaItem[];
+  /** scene-by-scene demo walkthrough; first scene doubles as the hero film */
+  scenes?: Scene[];
 };
 
 export const PROJECTS: Project[] = [
@@ -64,21 +79,21 @@ export const PROJECTS: Project[] = [
     liveUrl: "https://boxtype.boat3000.studio",
     accent: "red",
     cover: {
-      src: "/boxtype-demo.mp4",
-      av1Src: "/boxtype-demo-av1.mp4",
+      src: "/boxtype/demo.mp4",
+      av1Src: "/boxtype/demo-av1.mp4",
       caption: "BOXTYPE · live demo",
       kind: "video",
     },
     summary:
-      "A text editor that throws out the line-as-a-stack. Instead of appending characters left-to-right, BOXTYPE gives you an infinite character matrix — place the cursor anywhere and type, like pen on paper.",
+      "A text editor that throws out the line-as-a-stack. Instead of appending characters left-to-right, BOXTYPE gives you an infinite page. Place the cursor anywhere and type, like pen on paper.",
     problem:
-      "Every text editor inherits the same 50-year-old assumption: a document is a stack of lines and you type at the end of one. That's great for prose and terrible for the way people actually sketch with type — laying out, spacing, and composing on a surface. We wanted to see what an editor feels like when the page is a grid you can address directly.",
+      "Every text editor inherits the same 50-year-old assumption: a document is a stack of lines and you type at the end of one. That's great for prose and terrible for the way people actually sketch with type: laying out, spacing, and composing on a surface. We wanted to see what an editor feels like when the page is a grid you can address directly.",
     approach:
-      "We modelled the document as an m×n matrix of cells with true random access — every cell is addressable, the cursor can jump anywhere, and editing is modal in the Vim tradition so power users keep their hands on the keys. The whole thing is keyboard-first, with editable, platform-aware shortcuts for navigation, editing and clipboard work.",
+      "We modelled the document as a page of cells with true random access: every cell is addressable, the cursor can jump anywhere, and editing is modal in the Vim tradition so power users keep their hands on the keys. The whole thing is keyboard-first, with editable, platform-aware shortcuts for navigation, editing and clipboard work.",
     highlights: [
       {
         title: "Random access",
-        body: "Jump the cursor to any cell instantly — no line-by-line navigation. The page is a canvas, not a queue.",
+        body: "Jump the cursor to any cell instantly, with no line-by-line navigation. The page is a canvas, not a queue.",
       },
       {
         title: "Modal editing",
@@ -94,8 +109,8 @@ export const PROJECTS: Project[] = [
     stack: ["React", "TypeScript", "Vite", "Framer Motion", "Vitest"],
     gallery: [
       {
-        src: "/boxtype-mobile.mp4",
-        caption: "Typing on the matrix — on mobile",
+        src: "/boxtype/mobile.mp4",
+        caption: "Typing on the page, on mobile",
         kind: "video",
         portrait: true,
       },
@@ -106,40 +121,44 @@ export const PROJECTS: Project[] = [
   {
     slug: "oculos",
     name: "Oculos",
-    tagline: "A retail operating system for independent shops.",
+    tagline: "The merchant operating system for independent shops.",
     category: "Studio release",
     status: "live",
     year: "2025–26",
     roles: ["Product design", "Engineering", "Brand"],
     liveUrl: "https://oculos.boat3000.studio",
     accent: "blue",
-    cover: { src: "/mockup-3.png", caption: "Oculos · operations dashboard" },
+    cover: {
+      src: "/oculos/cashier-wide.jpg",
+      caption: "Oculos · point of sale",
+      kind: "image",
+    },
     summary:
-      "A full retail operating system — point of sale, inventory, sales, shifts, refunds, customer credit and profit reporting — built for small shops that have outgrown spreadsheets but can't stomach enterprise software.",
+      "A merchant operating system for independent shops: a fast point of sale, inventory, profit, shifts, customer credit and an anti-theft audit in one place. Past recording what was sold, it tells the owner what was actually earned, what's missing, and who handled it.",
     problem:
-      "Independent shops run on a patchwork of spreadsheets, a basic till, and memory. The moment there's more than one person behind the counter, things slip: stock counts drift, shift handovers lose money, refunds go unrecorded, and nobody actually knows the day's profit. The enterprise tools that solve this are priced and designed for chains, not a two-person store.",
+      "An independent shop runs on a bank POS, a notebook, and the owner's memory. The POS records what was sold but never what it earned, and the notebook drifts the moment a second person is behind the counter: stock counts go stale, shift handovers lose cash, refunds and discounts go unrecorded, and nobody can say what the day actually made or where the money leaked. The tools that fix this are priced and shaped for chains, not a one-to-five-branch shop.",
     approach:
-      "We built a multi-tenant system around the real shape of a shop: a fast point-of-sale, inventory with tracked stock movements, shifts with proper handover, refunds, customer accounts with credit, and profit reports that are honest. Critically, the POS is built to keep working when the connection drops — local-first where it matters most, at the counter — with an append-only activity log so the books can always be trusted.",
+      "We built Oculos around the real shape of a shop and the question a bank POS dodges: what did you earn, and what's missing? A fast point of sale takes cash, card, transfer, split or credit on any terminal, and every sale, void, discount and stock movement writes itself to one auditable ledger across every location. On top of that sits the wedge: an owner-only daily performance report, profit and margin, and anti-theft exception alerts that learn what's normal for each cashier. It is Naira-native, and it keeps working at the counter when the connection drops.",
     highlights: [
       {
-        title: "Point of sale that survives a dropped connection",
-        body: "The till is the one thing that can never go down. We designed the sale path to stay usable offline and reconcile cleanly when it's back.",
+        title: "One screen, every morning",
+        body: "The daily performance report: the day's sales and profit, the cash and transfer you should be holding, what is running low and who is slow. The number a bank POS makes you work out yourself.",
       },
       {
-        title: "Inventory you can trust",
-        body: "Every stock change is a recorded movement, imports run in auditable batches, and counts reflect reality instead of a stale spreadsheet.",
+        title: "Sales is vanity, profit is the point",
+        body: "Set cost prices and read gross profit and margin, per day and per product. Owner-only, so cashiers sell while you alone see what the shop really made.",
       },
       {
-        title: "Multi-tenant, team-aware",
-        body: "Organisations, members, invites and permissions — built so a shop owner and their staff share one system with the right boundaries.",
+        title: "Business CCTV for money and stock",
+        body: "Oculos learns what is normal for each cashier, then flags the outliers: void spikes, refund abuse, discounts to friends, no-sale drawer opens, edits after close.",
       },
       {
-        title: "Append-only audit",
-        body: "Sales, refunds and money movements are append-only and logged, so the financial record is tamper-evident by construction.",
+        title: "The shelf and the system agree",
+        body: "Every sale, restock and adjustment moves one auditable ledger across one to five locations, with reorder alerts before you run out and owner, manager and cashier roles that keep everyone in their lane.",
       },
     ],
     outcome:
-      "Live as a studio release (formerly prototyped as “receipt-shop”). It's our most production-grade product — multi-tenant, heavily tested with integration, end-to-end and component suites — and our clearest evidence that the studio ships real, durable software, not just interfaces.",
+      "Live as a studio release (formerly prototyped as “receipt-shop”). It's our most production-grade product: multi-tenant, Naira-native, and heavily tested with integration, end-to-end and component suites. It's our clearest evidence that the studio ships real, durable software, not just interfaces.",
     stack: [
       "Next.js",
       "TypeScript",
@@ -149,10 +168,42 @@ export const PROJECTS: Project[] = [
       "Playwright",
       "Storybook",
     ],
-    gallery: [
-      { src: "/mockup-1.png", caption: "Sell flow" },
-      { src: "/mockup-2.png", caption: "Reporting" },
-      { src: "/mockup-3.png", caption: "Operations dashboard" },
+    scenes: [
+      {
+        key: "cashier",
+        role: "Your cashier",
+        title: "A sale, end to end",
+        story:
+          "Your cashier signs in, opens her shift with a cash float, rings up a few items and takes cash. The receipt prints, and your drawer and stock update themselves. Your whole counter, in under a minute.",
+      },
+      {
+        key: "manager",
+        role: "Your manager",
+        title: "A refund, and a stock fix",
+        story:
+          "A customer brings something back. Your manager pulls up the original sale, refunds it with a reason on the record, then corrects a miscounted product. Every adjustment is logged, so nothing happens in the dark.",
+      },
+      {
+        key: "review",
+        role: "You, the owner",
+        title: "The whole day, one screen",
+        story:
+          "From one screen you read the day: your takings, the cash you should be holding, red flags, owner-only profit and margin, the activity log, and your live catalog. No spreadsheet stitching.",
+      },
+      {
+        key: "import",
+        role: "You, the owner",
+        title: "Catalog, from a spreadsheet",
+        story:
+          "You point Oculos at a CSV, review a validated preview that catches the problems before they land, and commit. Your products go live in the catalog, hundreds at once and none by hand.",
+      },
+      {
+        key: "investigation",
+        role: "You, the owner",
+        title: "Catching what slips",
+        story:
+          "One of your managers opened the drawer five times with no sale. Your morning report flags it by name, and one tap drops you into the activity log: every no-sale, timestamped. Your books defend themselves.",
+      },
     ],
   },
 

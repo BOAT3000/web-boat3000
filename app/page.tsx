@@ -395,14 +395,14 @@ export default function Home() {
               </div>
               <div className="spec v2">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/boxtype-still.webp" alt="BOXTYPE editor" />
+                <img src="/boxtype/still.webp" alt="BOXTYPE editor" />
               </div>
               <div className="spec v3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/bracelet-mobile-2.png" alt="BRACELET study view" />
+                <img src="/oculos/landing-mobile.webp" alt="Oculos landing, mobile" />
               </div>
               <span className="tag">
-                BOXTYPE · BRACELET · studio releases
+                OCULOS · BOXTYPE · BRACELET
               </span>
             </Reveal>
           </div>
