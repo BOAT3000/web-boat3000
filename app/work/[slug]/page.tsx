@@ -127,7 +127,10 @@ export default async function CaseStudy({ params }: Params) {
         {p.gallery && p.gallery.length > 0 && (
           <section className="wrap cs-gallery">
             {p.gallery.map((m, i) => (
-              <figure className="cs-shot" key={i}>
+              <figure
+                className={`cs-shot${m.portrait ? " portrait" : ""}`}
+                key={i}
+              >
                 <Media item={m} />
                 <figcaption className="mono">{m.caption}</figcaption>
               </figure>

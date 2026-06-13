@@ -394,13 +394,8 @@ export default function Home() {
                 <img src="/bracelet-mobile.png" alt="BRACELET mobile" />
               </div>
               <div className="spec v2">
-                <video
-                  src="/boxtype-demo.mp4"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/boxtype-still.webp" alt="BOXTYPE editor" />
               </div>
               <div className="spec v3">
                 {/* eslint-disable-next-line @next/next/no-img-element */}

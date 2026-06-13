@@ -1667,6 +1667,14 @@ section {
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+.cs-shot.portrait {
+  /* phone-shaped: narrower than the column, media keeps its native aspect */
+  width: 42%;
+}
+.cs-shot.portrait img,
+.cs-shot.portrait video {
+  aspect-ratio: 1178 / 2556;
+}
 .cs-shot figcaption {
   padding: 12px 14px;
   font-size: 11px;
@@ -1677,6 +1685,9 @@ section {
 @media (max-width: 640px) {
   .cs-gallery {
     grid-template-columns: 1fr;
+  }
+  .cs-shot.portrait {
+    width: 100%;
   }
 }
 .cs-outcome {
