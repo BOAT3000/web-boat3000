@@ -7,12 +7,21 @@ import {
   PROJECT_SLUGS,
   STATUS_LABEL,
   getProject,
+  type Scene,
 } from "@/content/work";
 import { SiteHeader } from "@/app/components/SiteHeader";
 import { SiteFooter } from "@/app/components/SiteFooter";
 import { Media } from "@/app/components/Media";
+import { SceneFilm, type SceneSource } from "@/app/components/SceneFilm";
 
 type Params = { params: Promise<{ slug: string }> };
+
+/* Build the media for a scene + orientation. Files live at
+   /public/oculos/<key>-{wide,tall}.{mp4,jpg}: crisp originals, no AV1. */
+function sceneSrc(s: Scene, o: "wide" | "tall"): SceneSource {
+  const base = `/oculos/${s.key}-${o}`;
+  return { src: `${base}.mp4`, poster: `${base}.jpg` };
+}
 
 export function generateStaticParams() {
   return PROJECT_SLUGS.map((slug) => ({ slug }));
@@ -92,7 +101,15 @@ export default async function CaseStudy({ params }: Params) {
         {/* ---- cover ---- */}
         <section className="wrap">
           <figure className="cs-cover">
-            <Media item={p.cover} />
+            {p.scenes ? (
+              <SceneFilm
+                wide={sceneSrc(p.scenes[0], "wide")}
+                tall={sceneSrc(p.scenes[0], "tall")}
+                orientation="wide"
+              />
+            ) : (
+              <Media item={p.cover} />
+            )}
           </figure>
         </section>
 
@@ -122,6 +139,33 @@ export default async function CaseStudy({ params }: Params) {
             </div>
           </div>
         </section>
+
+        {/* ---- scene walkthrough ---- */}
+        {p.scenes && p.scenes.length > 1 && (
+          <section className="wrap cs-scenes">
+            <header className="cs-scenes-head">
+              <span className="idx mono">05 / See it run your day</span>
+              <h2>Your shop, your team, nothing slipping through.</h2>
+            </header>
+            {p.scenes.slice(1).map((sc, i) => (
+              <article
+                className={`scene-row${i % 2 === 1 ? " rev" : ""}`}
+                key={sc.key}
+              >
+                <SceneFilm
+                  className="scene-row-film"
+                  wide={sceneSrc(sc, "wide")}
+                  tall={sceneSrc(sc, "tall")}
+                />
+                <div className="scene-copy">
+                  <span className="scene-role mono">{sc.role}</span>
+                  <h3>{sc.title}</h3>
+                  <p>{sc.story}</p>
+                </div>
+              </article>
+            ))}
+          </section>
+        )}
 
         {/* ---- gallery ---- */}
         {p.gallery && p.gallery.length > 0 && (
