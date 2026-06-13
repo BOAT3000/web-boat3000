@@ -1,5 +1,9 @@
 import type { MediaItem } from "@/content/work";
 
+/* Main profile, level 5.1, 10-bit — matches our AV1 encodes; lets
+   browsers reject the source from the type alone instead of fetching it. */
+export const AV1_MP4_TYPE = 'video/mp4; codecs="av01.0.13M.10"';
+
 /* Renders an image or autoplaying muted video from a MediaItem. */
 export function Media({
   item,
@@ -18,14 +22,10 @@ export function Media({
   }
   if (item.kind === "video") {
     return (
-      <video
-        className={className}
-        src={item.src}
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
+      <video className={className} autoPlay loop muted playsInline>
+        {item.av1Src && <source src={item.av1Src} type={AV1_MP4_TYPE} />}
+        <source src={item.src} type="video/mp4" />
+      </video>
     );
   }
   return (

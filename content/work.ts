@@ -14,6 +14,10 @@ export type MediaItem = {
   caption: string;
   /** "poster" renders a branded placeholder (for coming-soon work with no asset) */
   kind?: "image" | "video" | "poster";
+  /** optional AV1 encode, preferred by browsers that can decode it (src stays the h264 fallback) */
+  av1Src?: string;
+  /** phone-shaped media — gallery renders it at its native tall aspect instead of the 4:3 crop */
+  portrait?: boolean;
 };
 
 export type Project = {
@@ -59,7 +63,12 @@ export const PROJECTS: Project[] = [
     roles: ["Product design", "Engineering", "Brand"],
     liveUrl: "https://boxtype.boat3000.studio",
     accent: "red",
-    cover: { src: "/boxtype-demo.mp4", caption: "BOXTYPE · live demo", kind: "video" },
+    cover: {
+      src: "/boxtype-demo.mp4",
+      av1Src: "/boxtype-demo-av1.mp4",
+      caption: "BOXTYPE · live demo",
+      kind: "video",
+    },
     summary:
       "A text editor that throws out the line-as-a-stack. Instead of appending characters left-to-right, BOXTYPE gives you an infinite character matrix — place the cursor anywhere and type, like pen on paper.",
     problem:
@@ -84,7 +93,12 @@ export const PROJECTS: Project[] = [
       "Shipped as a studio release and a proof-of-craft: a small, opinionated tool we built because we wanted to use it. Built test-first, it's the kind of thing that shows what we hold client work to.",
     stack: ["React", "TypeScript", "Vite", "Framer Motion", "Vitest"],
     gallery: [
-      { src: "/boxtype-demo.mp4", caption: "Typing on the matrix", kind: "video" },
+      {
+        src: "/boxtype-mobile.mp4",
+        caption: "Typing on the matrix — on mobile",
+        kind: "video",
+        portrait: true,
+      },
     ],
   },
 
